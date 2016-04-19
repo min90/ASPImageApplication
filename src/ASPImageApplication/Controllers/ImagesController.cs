@@ -1,19 +1,125 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.Data.Entity;
+using ASPImageApplication.Models;
 
 namespace ASPImageApplication.Controllers
 {
     public class ImagesController : Controller
     {
-        // GET: /<controller>/
+        private ApplicationDbContext _context;
+
+        public ImagesController(ApplicationDbContext context)
+        {
+            _context = context;    
+        }
+
+        // GET: Images
         public IActionResult Index()
         {
+            var applicationDbContext = _context.Image.Include(i => i.Category);
+            return View(applicationDbContext.ToList());
+        }
+
+        // GET: Images/Details/5
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+
+            Image image = _context.Image.Single(m => m.ImageId == id);
+            if (image == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(image);
+        }
+
+        // GET: Images/Create
+        public IActionResult Create()
+        {
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Category");
             return View();
+        }
+
+        // POST: Images/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Image image)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Image.Add(image);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Category", image.CategoryId);
+            return View(image);
+        }
+
+        // GET: Images/Edit/5
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+
+            Image image = _context.Image.Single(m => m.ImageId == id);
+            if (image == null)
+            {
+                return HttpNotFound();
+            }
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Category", image.CategoryId);
+            return View(image);
+        }
+
+        // POST: Images/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Image image)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Update(image);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Category", image.CategoryId);
+            return View(image);
+        }
+
+        // GET: Images/Delete/5
+        [ActionName("Delete")]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+
+            Image image = _context.Image.Single(m => m.ImageId == id);
+            if (image == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(image);
+        }
+
+        // POST: Images/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            Image image = _context.Image.Single(m => m.ImageId == id);
+            _context.Image.Remove(image);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }
