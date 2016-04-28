@@ -1,32 +1,56 @@
 @model IEnumerable<ASPImageApplication.Models.Image>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gallery";
 }
 
-<h2>Index</h2>
+<h2>Gallery</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
+<p class="btn btn-primary">
+    <a asp-action="Create" style="color:white">Create New</a>
 </p>
+<br />
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Owner)
         </th>
         <th>
+            <p>Picture</p>
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Title)
         </th>
-        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.Category)
+        </th>
+        <th>
+            <p>Description</p>
+        </th>
+        <th>
+            <p>Actions</p>
+        </th>
     </tr>
     
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
+    if (item.Owner == User.Identity.Name)
+    {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Owner)
         </td>
         <td>
+            <img src="@Url.Action("Display", new { id = User.Identity.Name, dbId = item.ImageId })" class="img-rounded" alt="@item.FileName"/>
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Category.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
             <a asp-action="Edit" asp-route-id="@item.ImageId">Edit</a> |
@@ -34,5 +58,6 @@
             <a asp-action="Delete" asp-route-id="@item.ImageId">Delete</a>
         </td>
     </tr>
+    }
 }
 </table>

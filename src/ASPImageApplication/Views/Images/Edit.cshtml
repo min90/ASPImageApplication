@@ -1,48 +1,56 @@
 @model ASPImageApplication.Models.Image
+@inject ASPImageApplication.Services.CategoryService CategoryServiceImp
+
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+<h2><b>Edit Image</b> @Model.Title</h2>
+<div class="row">
+    <div class="col-md-6">
+        <img src="@Url.Action("Display", new { id=User.Identity.Name, dbId=Model.ImageId })" class="img-rounded" alt="Model.FileName" id="_image" />
 
-<form asp-action="Edit">
-    <div class="form-horizontal">
-        <h4>Image</h4>
-        <hr />
-        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="ImageId" />
-        <div class="form-group">
-            <label asp-for="CategoryId" class="control-label col-md-2">CategoryId</label>
-            <div class="col-md-10">
-                <select asp-for="CategoryId" class="form-control" />
-                <span asp-validation-for="CategoryId" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Owner" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Owner" class="form-control" />
-                <span asp-validation-for="Owner" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Title" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
     </div>
-</form>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+
+    <form asp-action="Edit">
+        <div class="form-horizontal col-md-6">
+            <hr />
+            <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ImageId" />
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label col-md-2">CategoryId</label>
+                <div class="col-md-10">
+                    <select asp-for="CategoryId" asp-items="CategoryServiceImp.GetCategories()" class="form-control"></select>
+                    <span asp-validation-for="CategoryId" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="btn btn-success">
+    <a asp-action="Index" style="color:white">Back to List</a>
 </div>
 
 @section Scripts {

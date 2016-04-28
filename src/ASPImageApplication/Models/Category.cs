@@ -10,5 +10,6 @@ namespace ASPImageApplication.Models
         public int CategoryId { get; set; }
         public string Name { get; set; }
         public List<Image> Images { get; set; }
+        public string Owner { get; set; }
     }
 }

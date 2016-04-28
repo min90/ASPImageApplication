@@ -1,26 +1,19 @@
 @model ASPImageApplication.Models.Image
-
+@inject ASPImageApplication.Services.CategoryService CategoryServiceImp
 @{
     ViewData["Title"] = "Create";
 }
 
 <h2>Upload a new Image</h2>
 
-<form asp-action="Create">
+<form asp-action="Create" enctype="multipart/form-data">
     <div class="form-horizontal">
         <hr />
         <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="CategoryId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="CategoryId" class ="form-control"></select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Owner" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Owner" class="form-control" />
-                <span asp-validation-for="Owner" class="text-danger" />
+                <select asp-for="CategoryId" asp-items="CategoryServiceImp.GetCategories(User.Identity.Name)" class ="form-control"></select>
             </div>
         </div>
         <div class="form-group">
@@ -31,6 +24,24 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="Description" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">File</label>
+            <div class="col-md-10">
+                <input type="file" name="file" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="hidden" name="Owner" value="@User.Identity.Name" />
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
@@ -38,8 +49,8 @@
     </div>
 </form>
 
-<div class="btn btn-default">
-    <a asp-action="Index">Back to Imagelist</a>
+<div class="btn btn-success">
+    <a asp-action="Index" style="color:white">Back to list</a>
 </div>
 
 @section Scripts {

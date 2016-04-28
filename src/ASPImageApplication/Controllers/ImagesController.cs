@@ -3,16 +3,22 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using ASPImageApplication.Models;
+using Microsoft.AspNet.Http;
+using Microsoft.Net.Http.Headers;
+using System.IO;
+using Microsoft.AspNet.Authorization;
 
 namespace ASPImageApplication.Controllers
 {
+    [Authorize]
     public class ImagesController : Controller
     {
         private ApplicationDbContext _context;
-
-        public ImagesController(ApplicationDbContext context)
+        private IHttpContextAccessor _httpContextAccessor;
+        public ImagesController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
-            _context = context;    
+            _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Images
@@ -49,10 +55,32 @@ namespace ASPImageApplication.Controllers
         // POST: Images/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Image image)
+        public IActionResult Create(Image image, IFormFile file)
         {
+            if (file == null || file.Length < 0)
+            {
+                ModelState.AddModelError("image_file", "File is invalid");
+            }
             if (ModelState.IsValid)
             {
+                image.FileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                image.MimeType = file.ContentType;
+                image.Owner = _httpContextAccessor.HttpContext.User.Identity.Name;
+
+                using (var stream = file.OpenReadStream())
+                {
+                    byte[] buffer = new byte[16 * 1024];
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        int read;
+                        while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            ms.Write(buffer, 0, read);
+                        }
+                        image.Data = ms.ToArray();
+                    }
+                }
+  
                 _context.Image.Add(image);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -120,6 +148,12 @@ namespace ASPImageApplication.Controllers
             _context.Image.Remove(image);
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Display(string id, int dbId)
+        {
+            var result = _context.Image.Where(i => i.ImageId == dbId && i.Owner == id);
+            return base.File(result.First().Data, result.First().MimeType);
         }
     }
 }

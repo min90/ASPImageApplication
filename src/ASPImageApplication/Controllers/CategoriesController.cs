@@ -3,9 +3,11 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using ASPImageApplication.Models;
+using Microsoft.AspNet.Authorization;
 
 namespace ASPImageApplication.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
         private ApplicationDbContext _context;
@@ -115,6 +117,12 @@ namespace ASPImageApplication.Controllers
             _context.Category.Remove(category);
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Display(string id)
+        {
+            var result = _context.Category.Where(i => i.Owner == id);
+            return View(result.First().Name);
         }
     }
 }

@@ -8,9 +8,10 @@ using ASPImageApplication.Models;
 namespace ASPImageApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160426115808_fourthimage")]
+    partial class fourthimage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
@@ -71,8 +72,6 @@ namespace ASPImageApplication.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("Owner");
-
                     b.HasKey("CategoryId");
                 });
 
@@ -85,8 +84,7 @@ namespace ASPImageApplication.Migrations
 
                     b.Property<byte[]>("Data");
 
-                    b.Property<string>("Description")
-                        .IsRequired();
+                    b.Property<string>("Description");
 
                     b.Property<string>("FileName");
 
@@ -94,8 +92,7 @@ namespace ASPImageApplication.Migrations
 
                     b.Property<string>("Owner");
 
-                    b.Property<string>("Title")
-                        .IsRequired();
+                    b.Property<string>("Title");
 
                     b.HasKey("ImageId");
                 });

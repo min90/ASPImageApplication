@@ -8,9 +8,10 @@ using ASPImageApplication.Models;
 namespace ASPImageApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160426125358_fifthimage")]
+    partial class fifthimage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
@@ -70,8 +71,6 @@ namespace ASPImageApplication.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name");
-
-                    b.Property<string>("Owner");
 
                     b.HasKey("CategoryId");
                 });

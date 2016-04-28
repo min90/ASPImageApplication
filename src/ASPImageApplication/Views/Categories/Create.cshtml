@@ -4,11 +4,10 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<h2>Create a new Category</h2>
 
 <form asp-action="Create">
     <div class="form-horizontal">
-        <h4>Category</h4>
         <hr />
         <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
         <div class="form-group">
@@ -19,6 +18,11 @@
             </div>
         </div>
         <div class="form-group">
+            <div class="col-md-10">
+                <input type="hidden" name="Owner" value="@User.Identity.Name" />
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
@@ -26,7 +30,7 @@
     </div>
 </form>
 
-<div>
+<div class="btn btn-default">
     <a asp-action="Index">Back to List</a>
 </div>
 
