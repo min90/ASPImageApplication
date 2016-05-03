@@ -22,7 +22,13 @@ namespace ASPImageApplication.Controllers
 
         public IActionResult Index()
         {
-            return View(_context.Image.Where(i => i.Public).ToList());
+            if(_context.Image.Where(i => i.Public).ToList() == null)
+            {
+                return View();
+            } else
+            {
+                return View(_context.Image.Where(i => i.Public).ToList());
+            }
         }
 
         public IActionResult About()

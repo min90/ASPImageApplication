@@ -17,7 +17,6 @@ namespace ASPImageApplication.Models
         public string FileName { get; set; }
         public string MimeType { get; set; }
         public byte[] Data { get; set; }
-        [Required]
         public string Description { get; set; }
         public bool Public { get; set; }
         public int Likes { get; set; }

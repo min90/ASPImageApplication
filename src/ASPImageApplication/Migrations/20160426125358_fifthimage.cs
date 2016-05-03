@@ -21,7 +21,7 @@ namespace ASPImageApplication.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Description",
                 table: "Image",
-                nullable: false);
+                nullable: true);
             migrationBuilder.AddForeignKey(
                 name: "FK_Image_Category_CategoryId",
                 table: "Image",
