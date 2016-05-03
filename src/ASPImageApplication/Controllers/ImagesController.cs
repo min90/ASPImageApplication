@@ -7,6 +7,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.Net.Http.Headers;
 using System.IO;
 using Microsoft.AspNet.Authorization;
+using System.Diagnostics;
 
 namespace ASPImageApplication.Controllers
 {
@@ -67,6 +68,7 @@ namespace ASPImageApplication.Controllers
                 image.MimeType = file.ContentType;
                 image.Owner = _httpContextAccessor.HttpContext.User.Identity.Name;
 
+
                 using (var stream = file.OpenReadStream())
                 {
                     byte[] buffer = new byte[16 * 1024];
@@ -80,7 +82,7 @@ namespace ASPImageApplication.Controllers
                         image.Data = ms.ToArray();
                     }
                 }
-  
+
                 _context.Image.Add(image);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -106,18 +108,22 @@ namespace ASPImageApplication.Controllers
             return View(image);
         }
 
-        // POST: Images/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Image image)
         {
             if (ModelState.IsValid)
             {
-                _context.Update(image);
+                Image tempImage = _context.Image.Single(i => i.ImageId == image.ImageId);
+                tempImage.Description = image.Description;
+                tempImage.CategoryId = image.CategoryId;
+                tempImage.Title = image.Title;
+                tempImage.Public = image.Public;
+                tempImage.Owner = User.Identity.Name;
+                _context.Update(tempImage);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
-            }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "CategoryId", "Category", image.CategoryId);
+            }  
             return View(image);
         }
 
@@ -155,5 +161,6 @@ namespace ASPImageApplication.Controllers
             var result = _context.Image.Where(i => i.ImageId == dbId && i.Owner == id);
             return base.File(result.First().Data, result.First().MimeType);
         }
+
     }
 }

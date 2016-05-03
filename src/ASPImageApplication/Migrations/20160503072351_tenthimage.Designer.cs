@@ -8,9 +8,10 @@ using ASPImageApplication.Models;
 namespace ASPImageApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160503072351_tenthimage")]
+    partial class tenthimage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
@@ -89,8 +90,6 @@ namespace ASPImageApplication.Migrations
                         .IsRequired();
 
                     b.Property<string>("FileName");
-
-                    b.Property<int>("Likes");
 
                     b.Property<string>("MimeType");
 

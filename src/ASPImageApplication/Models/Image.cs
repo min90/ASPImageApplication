@@ -19,5 +19,7 @@ namespace ASPImageApplication.Models
         public byte[] Data { get; set; }
         [Required]
         public string Description { get; set; }
+        public bool Public { get; set; }
+        public int Likes { get; set; }
     }
 }
